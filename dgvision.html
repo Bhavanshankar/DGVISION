@@ -1,0 +1,558 @@
+<html>
+
+<head>
+    <title>DG Vision 2.0 App</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .App {
+            text-align: center;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .header {
+            padding: 15px;
+        }
+
+        .dashboard,
+        .profile {
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .header {
+            padding: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .dashboard,
+        .profile {
+            padding: 20px;
+        }
+
+        .dashboard h2,
+        .profile h2 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .status p {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            margin: 15px 0;
+        }
+
+        .status p i {
+            margin-right: 15px;
+            font-size: 28px;
+            color: #1a73e8;
+        }
+
+        .alert {
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 18px;
+            color: red;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            background-color: #f0f4f8;
+        }
+
+        .login-box h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .login-box .app-title {
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        .theme-toggle {
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .light-theme {
+            background-color: #f2f2f2;
+            color: #000;
+        }
+
+        .light-theme .header {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        .light-theme .dashboard,
+        .light-theme .profile {
+            background-color: white;
+        }
+
+        .light-theme .alert {
+            color: red;
+        }
+
+        .dark-theme {
+            background-color: #121212;
+            color: #fff;
+        }
+
+        .dark-theme .header {
+            background-color: #3a3f58;
+            color: #fff;
+        }
+
+        .dark-theme .dashboard,
+        .dark-theme .profile {
+            background-color: #1e1e1e;
+        }
+
+        .dark-theme .alert {
+            color: #ff6b6b;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 0;
+        }
+
+        .chatbot-input button {
+            padding: 10px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .chatbot-icon {
+            position: fixed;
+            bottom: 80px;
+            /* Adjusted to be above the footer */
+            right: 20px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background-color: #1a73e8;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer i {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .sos-button {
+            background-color: #ff0000;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .notification-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ff0000;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .footer {
+                width: 50%;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 8px 8px 0 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="light-theme">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function Login({ onLogin }) {
+            const [username, setUsername] = useState('');
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+
+            const handleLogin = () => {
+                if (!/^[a-zA-Z0-9]+$/.test(username)) {
+                    setError('Username should contain only alphanumeric characters.');
+                } else if (password.length < 4 || password.length > 10) {
+                    setError('Password should be between 4 and 10 characters.');
+                } else {
+                    setError('');
+                    onLogin();
+                }
+            };
+
+            return (
+                <div className="login-container">
+                    <div className="login-box">
+                        <h1>Login</h1>
+                        <div className="app-title">DG VISION APP</div>
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button onClick={handleLogin}>Login</button>
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                    </div>
+                </div>
+            );
+        }
+
+        function Header() {
+            return (
+                <header className="header">
+                    <h1>DG Vision 2.0</h1>
+                    <p>Real-time Driver Safety Monitoring System</p>
+                </header>
+            );
+        }
+
+        function Dashboard() {
+            const [driverStatus, setDriverStatus] = useState("Normal");
+            const [alert, setAlert] = useState("");
+            const [heartRate, setHeartRate] = useState(72);
+            const [tirePressure, setTirePressure] = useState(32);
+            const [speed, setSpeed] = useState(60);
+            const [notification, setNotification] = useState("");
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    checkDriverStatus();
+                    checkHeartRate();
+                    checkTirePressure();
+                    checkSpeed();
+                }, 5000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const checkDriverStatus = () => {
+                const randomStatus = Math.random();
+                if (randomStatus > 0.8) {
+                    setDriverStatus("Drowsy");
+                    setAlert("Drowsiness Detected! Please Stay Alert.");
+                } else if (randomStatus > 0.5) {
+                    setDriverStatus("Distracted");
+                    setAlert("Mobile Detection Alert! Keep Focused on the Road.");
+                } else {
+                    setDriverStatus("Normal");
+                    setAlert("");
+                }
+            };
+
+            const checkHeartRate = () => {
+                const randomHeartRate = 65 + Math.floor(Math.random() * 30);
+                setHeartRate(randomHeartRate);
+                if (randomHeartRate > 100 || randomHeartRate < 60) {
+                    setAlert("Heart Rate Alert! Consider taking a break.");
+                }
+            };
+
+            const checkTirePressure = () => {
+                const randomTirePressure = 30 + Math.floor(Math.random() * 5);
+                setTirePressure(randomTirePressure);
+                if (randomTirePressure < 32) {
+                    setAlert("Low Tire Pressure! Please check your tires.");
+                }
+            };
+
+            const checkSpeed = () => {
+                const randomSpeed = 50 + Math.floor(Math.random() * 30);
+                setSpeed(randomSpeed);
+            };
+
+            const handleSOS = () => {
+                setNotification("Emergency message sent. Location is sent to 102 and emergency contact.");
+                setTimeout(() => {
+                    setNotification("");
+                }, 10000);
+            };
+
+            return (
+                <div className="dashboard">
+                    <h2>Driver Dashboard</h2>
+                    <div className="status">
+                        <p><i className="fas fa-user"></i> <strong>Driver Status:</strong> {driverStatus}</p>
+                        <p><i className="fas fa-heartbeat"></i> <strong>Heart Rate:</strong> {heartRate} BPM</p>
+                        <p><i className="fas fa-tachometer-alt"></i> <strong>Tire Pressure:</strong> {tirePressure} PSI</p>
+                        <p><i className="fas fa-tachometer-alt"></i> <strong>Speed:</strong> {speed} km/h</p>
+                    </div>
+                    {alert && <div className="alert">{alert}</div>}
+                    <button className="sos-button" onClick={handleSOS}>SOS</button>
+                    {notification && <div className="notification-box">{notification}</div>}
+                    <ChatBot />
+                </div>
+            );
+        }
+
+        function Profile() {
+            return (
+                <div className="profile">
+                    <h2>Profile</h2>
+                    <div className="status">
+                        <p><i className="fas fa-user"></i> <strong>Name:</strong> Bhavan shankar</p>
+                        <p><i className="fas fa-envelope"></i> <strong>Email:</strong> bhavan9304@gmail.com</p>
+                        <p><i className="fas fa-phone"></i> <strong>Phone:</strong> 8778934798</p>
+                        <p><i className="fas fa-briefcase"></i> <strong>Business:</strong> ABC Logistics</p>
+                    </div>
+                </div>
+            );
+        }
+
+        function ChatBot() {
+            const [messages, setMessages] = useState([]);
+            const [input, setInput] = useState('');
+            const [isOpen, setIsOpen] = useState(false);
+
+            const handleSend = () => {
+                if (input.trim()) {
+                    setMessages([...messages, { text: input, sender: 'user' }]);
+                    setInput('');
+                    setTimeout(() => {
+                        setMessages([...messages, { text: input, sender: 'user' }, { text: 'This is a response from the bot.', sender: 'bot' }]);
+                    }, 1000);
+                }
+            };
+
+            return (
+                <>
+                    {isOpen ? (
+                        <div className="chatbot-container">
+                            <div className="chatbot-header" onClick={() => setIsOpen(false)}>ChatBot</div>
+                            <div className="chatbot-messages">
+                                {messages.map((msg, index) => (
+                                    <div key={index} style={{ textAlign: msg.sender === 'user' ? 'right' : 'left' }}>
+                                        <p style={{ backgroundColor: msg.sender === 'user' ? '#1a73e8' : '#f1f1f1', color: msg.sender === 'user' ? 'white' : 'black', padding: '10px', borderRadius: '10px', display: 'inline-block', margin: '5px 0' }}>
+                                            {msg.text}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="chatbot-input">
+                                <input
+                                    type="text"
+                                    placeholder="Type a message..."
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                                />
+                                <button onClick={handleSend}>Send</button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="chatbot-icon" onClick={() => setIsOpen(true)}>
+                            <i className="fas fa-comments"></i>
+                        </div>
+                    )}
+                </>
+            );
+        }
+
+        function Footer({ onHomeClick, onProfileClick }) {
+            return (
+                <div className="footer">
+                    <i className="fas fa-home" onClick={onHomeClick}></i>
+                    <i className="fas fa-user" onClick={onProfileClick}></i>
+                </div>
+            );
+        }
+
+        function App() {
+            const [isLoggedIn, setIsLoggedIn] = useState(false);
+            const [theme, setTheme] = useState('light-theme');
+            const [currentPage, setCurrentPage] = useState('dashboard');
+
+            const toggleTheme = () => {
+                setTheme(theme === 'light-theme' ? 'dark-theme' : 'light-theme');
+            };
+
+            useEffect(() => {
+                document.body.className = theme;
+            }, [theme]);
+
+            const renderPage = () => {
+                if (currentPage === 'dashboard') {
+                    return <Dashboard />;
+                } else if (currentPage === 'profile') {
+                    return <Profile />;
+                }
+            };
+
+            return (
+                <div className="App">
+                    {isLoggedIn ? (
+                        <>
+                            <Header />
+                            {renderPage()}
+                            <div className="theme-toggle" onClick={toggleTheme}>
+                                <i className={`fas ${theme === 'light-theme' ? 'fa-moon' : 'fa-sun'}`}></i> Toggle Theme
+                            </div>
+                            <Footer onHomeClick={() => setCurrentPage('dashboard')} onProfileClick={() => setCurrentPage('profile')} />
+                        </>
+                    ) : (
+                        <Login onLogin={() => setIsLoggedIn(true)} />
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+
+</html>
